@@ -17,5 +17,18 @@
         <button id="doit">GO</button>
     </div>
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  <script>
+      $(document).ready(function() {
+          $("#doit").click(function() {
+              console.log("doit");
+              $.get('http://adtest-api-app.azurewebsites.net/test', function(data, status) {
+                  console.log("resp");
+                  console.log(status);
+                  console.log(data);
+              });
+
+          });
+      })
+  </script>
 </body>
 </html>

@@ -1,0 +1,76 @@
+<!doctype html>
+
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+
+  <title>Azure AD testing</title>
+
+  <!--[if lt IE 9]>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv.js"></script>
+  <![endif]-->
+</head>
+
+<body>
+    <div>
+        Test authentication and data read<br />
+        <button id="doit">GO</button>
+    </div>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  <script>
+
+    /*
+    var aadTenant = "lassehavlive.onmicrosoft.com",
+    spaClientId = "{dbea17cb-34b9-431e-9357-99cac34d7427}", //AAD app client id for this app
+    serviceClientId = "95f8f453-e694-4fbd-b36a-ced983c4aa29", //AAD app client id for the service API app
+    var serviceUrl = "http://adtest-api-app.azurewebsites.net"; // the service API endpoint
+
+    var authContext = new AuthenticationContext({
+        instance: 'https://login.microsoftonline.com/',
+        tenant: aadTenant,
+        clientId: spaClientId,
+        postLogoutRedirectUri: window.location.origin,
+        cacheLocation: 'localStorage',
+    });
+
+    var isCallback = authContext.isCallback(window.location.hash);
+    if (isCallback) {
+        authContext.handleWindowCallback();
+    }
+
+    //var user = authContext.getCachedUser();
+    var serviceToken;
+
+    function login() {
+        authContext.login();
+    }
+
+    function getServiceToken() {
+        authContext.acquireToken(serviceClientId, function (err, res) {
+            serviceToken = res;
+        });
+    }
+
+    function callService() {
+        var r = new XMLHttpRequest();
+        r.open("GET", serviceUrl, true);
+        r.setRequestHeader("Authorization", "Bearer " + serviceToken);
+        r.onreadystatechange = function () {
+          console.log(r);
+        };
+        r.send();
+    }*/
+
+    $(document).ready(function() {
+        $("#doit").click(function() {
+            console.log("doit");
+            $.get('https://adtest-api-app.azurewebsites.net/test', function(data, status) {
+                console.log("resp");
+                console.log(status);
+                console.log(data);
+            });
+        });
+      })
+  </script>
+</body>
+</html>

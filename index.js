@@ -16,6 +16,11 @@ app.get('/test', function (req, res) {
     });
 });
 
+app.post('/.auth/login/aad/callback', function(req,res) {
+    console.log('auth post received');
+    res.send({status: "OK"})
+});
+
 
 
 app.listen(process.env.PORT || 3000, function () {

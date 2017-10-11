@@ -3,12 +3,7 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
-
   <title>Azure AD testing</title>
-
-  <!--[if lt IE 9]>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv.js"></script>
-  <![endif]-->
 </head>
 
 <body>
@@ -16,15 +11,23 @@
         Test authentication and data read<br />
         <button id="doit">GO</button>
     </div>
+    <div>
+        Get service token<br />
+        <button id="serviceToken">Get token</button>
+    </div>
+    <div>
+        Call service<br />
+        <button id="callService">call</button>
+    </div>
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-  <script src="adal.min.js"></script>
+  <script src="adal.js"></script>
   <script>
 
 
     var aadTenant = "lassehavlive.onmicrosoft.com";
-    var spaClientId = "{dbea17cb-34b9-431e-9357-99cac34d7427}"; //AAD app client id for this app
-    var serviceClientId = "{95f8f453-e694-4fbd-b36a-ced983c4aa29}"; //AAD app client id for the service API app
-    var serviceUrl = "http://adtest-api-app.azurewebsites.net"; // the service API endpoint
+    var spaClientId = "dbea17cb-34b9-431e-9357-99cac34d7427"; //AAD app client id for this app
+    var serviceClientId = "95f8f453-e694-4fbd-b36a-ced983c4aa29"; //AAD app client id for the service API app
+    var serviceUrl = "http://adtest-api-app.azurewebsites.net/test"; // the service API endpoint
 
     var authContext = new AuthenticationContext({
         instance: 'https://login.microsoftonline.com/',
@@ -39,7 +42,11 @@
         authContext.handleWindowCallback();
     }
 
-    //var user = authContext.getCachedUser();
+    var user = authContext.getCachedUser();
+    if(user !== null)
+    {
+        console.log("User data loaded from cache");
+    }
     var serviceToken;
 
     function login() {
@@ -49,6 +56,7 @@
     function getServiceToken() {
         authContext.acquireToken(serviceClientId, function (err, res) {
             serviceToken = res;
+            console.log("Service token acquired");
         });
     }
 
@@ -57,7 +65,12 @@
         r.open("GET", serviceUrl, true);
         r.setRequestHeader("Authorization", "Bearer " + serviceToken);
         r.onreadystatechange = function () {
-          console.log(r);
+            console.log(r);
+            if(r.readyState === XMLHttpRequest.DONE && r.status === 200)
+            {
+                console.log("service call successful with result:");
+                console.log(r.response);
+            }
         };
         r.send();
     }
@@ -66,12 +79,16 @@
         $("#doit").click(function() {
             console.log("Executing login func");
             login();
-            /* console.log("doit");
-            $.get('https://adtest-api-app.azurewebsites.net/test', function(data, status) {
-                console.log("resp");
-                console.log(status);
-                console.log(data);
-            });*/
+        });
+
+        $("#serviceToken").click(function() {
+            console.log("Executing get service token");
+            getServiceToken();
+        });
+
+        $("#callService").click(function() {
+            console.log("calling service");
+            callService();
         });
       })
   </script>
